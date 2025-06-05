@@ -1,5 +1,5 @@
 <?php
-require_once 'classecliente.php';
+require 'classecliente.php';
 $clientes = Cliente::listar();
 ?>
 <!DOCTYPE html>

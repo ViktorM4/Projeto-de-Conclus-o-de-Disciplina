@@ -1,9 +1,9 @@
 <?php
-require_once 'conexaobd.php';
+require 'conexaobd.php';
 
 class Cliente
 {
-    private $id;
+    private $id_cliente;
     private $nome;
     private $email;
     private $telefone;
@@ -13,7 +13,7 @@ class Cliente
 
     public function getId()
     {
-        return $this->id;
+        return $this->id_cliente;
     }
     public function getNome()
     {
@@ -35,11 +35,9 @@ class Cliente
     {
         return $this->dataNascimento;
     }
-
-
-    public function setId($id)
+    public function setId($id_cliente)
     {
-        $this->id = $id;
+        $this->id_cliente = $id_cliente; 
     }
     public function setNome($nome)
     {
@@ -63,24 +61,25 @@ class Cliente
     }
 
 
-    public function inserirCliente($nome, $email, $telefone, $cpf, $dataNascimento)
-    {
-        try {
-            $con = ConexaoBD::getConexao();
-            $sql = "INSERT INTO cliente (NOME, EMAIL, TELEFONE, CPF, DATA_NASCIMENTO)
-                    VALUES (:nome, :email, :telefone, :cpf, :data)";
-            $stmt = $con->prepare($sql);
-            $stmt->bindParam(':nome', $this->$nome);
-            $stmt->bindParam(':email', $this->$email);
-            $stmt->bindParam(':telefone', $this->$telefone);
-            $stmt->bindParam(':cpf', $this->$cpf);
-            $stmt->bindParam(':data', $this->$dataNascimento);
-            $stmt->execute();
-            if ($stmt->rowCount() > 0) {
-                return true;
-            } else {
-                return false;
-            }
+    public function inserirCliente()
+{
+    try {
+        $con = ConexaoBD::getConexao(); //
+        $sql = "INSERT INTO cliente (NOME, EMAIL, TELEFONE, CPF, DATA_NASCIMENTO)
+                VALUES (:nome, :email, :telefone, :cpf, :data)";
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':nome', $this->nome);
+        $stmt->bindParam(':email', $this->email);
+        $stmt->bindParam(':telefone', $this->telefone);
+        $stmt->bindParam(':cpf', $this->cpf);
+        $stmt->bindParam(':data', $this->dataNascimento);
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            $this->id_cliente = $con->lastInsertId(); 
+            return true;
+        } else {
+            return false;
+        }
 
         } catch (PDOException $e) {
             die("Erro ao inserir cliente: " . $e->getMessage());
@@ -88,16 +87,16 @@ class Cliente
     }
 
 
-    public function consultar($id)
+    public function consultar($id_cliente)
     {
         $con = ConexaoBD::getConexao();
         $sql = "SELECT * FROM cliente WHERE IDCLIENTE = :id";
         $stmt = $con->prepare($sql);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':id', $id_cliente);
         $stmt->execute();
         $dados = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($dados) {
-            $this->id = $dados['IDCLIENTE'];
+            $this->id_cliente = $dados['IDCLIENTE'];
             $this->nome = $dados['NOME'];
             $this->email = $dados['EMAIL'];
             $this->telefone = $dados['TELEFONE'];
@@ -131,7 +130,7 @@ class Cliente
         $stmt->bindParam(':telefone', $this->telefone);
         $stmt->bindParam(':cpf', $this->cpf);
         $stmt->bindParam(':data', $this->dataNascimento);
-        $stmt->bindParam(':id', $this->id);
+        $stmt->bindParam(':id', $this->id_cliente);
         return $stmt->execute();
     }
 

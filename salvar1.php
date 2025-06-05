@@ -1,34 +1,31 @@
 <?php
-if (file_exists('classecliente.php')) {
-    require_once 'classecliente.php';
-} else {
-    die('Error: Required file classecliente.php is missing.');
-$nome = filter_input(INPUT_POST, 'NOME', FILTER_SANITIZE_STRING);
-if ($nome && strlen($nome) <= 100) { // Example validation: max length 100
-    $cliente->setNome($nome);
-} else {
-    // Handle invalid input, e.g., redirect or show an error
-if (filter_var($_POST['EMAIL'], FILTER_VALIDATE_EMAIL)) {
-    $cliente->setEmail($_POST['EMAIL']);
-} else {
-    die('Error: Invalid email format.');
-}
-    exit;
-}
+require 'classecliente.php'; 
 
-$cliente = new Cliente();
+    $cliente = new Cliente();
 
-$cliente->setNome($_POST['NOME']);
-$cliente->setEmail($_POST['EMAIL']);
-$cliente->setTelefone($_POST['TELEFONE']);
-$cliente->setCpf($_POST['CPF']);
-$cliente->setDataNascimento($_POST['DATA_NASCIMENTO']);
+    $cliente->setNome(trim($_POST['nome']));
+    $cliente->setEmail(trim($_POST['email']));
+    $cliente->setTelefone(trim($_POST['telefone']));
+    $cliente->setCpf(trim($_POST['cpf']));
+    $cliente->setDataNascimento(trim($_POST['data']));
 
-if (!empty($_POST['id'])) {
-    $cliente->setId($_POST['id']);
-    $cliente->alterar();
-}
+    if (!empty($id)) {
+        $cliente->setId((int)$id); 
+        if ($cliente->alterar()) {
+            $sucesso = true;
+            $mensagem = "Cliente atualizado com sucesso!";
+        } else {
+            $mensagem = "Erro ao atualizar cliente.";
+        }
+    } else {
+        if ($cliente->inserirCliente()) {
+            $sucesso = true;
+            $mensagem = "Cliente cadastrado com sucesso!";
+        } else {
+            $mensagem = "Erro ao cadastrar cliente.";
+        }
+    }
 
+    echo "<p><a href='index.php'>Voltar para a lista de clientes</a></p>";
 
-header("Location: index.php");
-exit;
+?>

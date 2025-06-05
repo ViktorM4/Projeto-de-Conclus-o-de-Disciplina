@@ -1,5 +1,6 @@
 <?php
-require_once 'classecliente.php';
+
+require 'classecliente.php';
 $cliente = new Cliente();
 if (isset($_GET['id'])) {
     $cliente->consultar($_GET['id']);
