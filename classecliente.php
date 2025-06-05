@@ -1,0 +1,148 @@
+<?php
+require_once 'conexaobd.php';
+
+class Cliente
+{
+    private $id;
+    private $nome;
+    private $email;
+    private $telefone;
+    private $cpf;
+    private $dataNascimento;
+
+
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function getNome()
+    {
+        return $this->nome;
+    }
+    public function getEmail()
+    {
+        return $this->email;
+    }
+    public function getTelefone()
+    {
+        return $this->telefone;
+    }
+    public function getCpf()
+    {
+        return $this->cpf;
+    }
+    public function getDataNascimento()
+    {
+        return $this->dataNascimento;
+    }
+
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    public function setNome($nome)
+    {
+        $this->nome = $nome;
+    }
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+    public function setTelefone($telefone)
+    {
+        $this->telefone = $telefone;
+    }
+    public function setCpf($cpf)
+    {
+        $this->cpf = $cpf;
+    }
+    public function setDataNascimento($data)
+    {
+        $this->dataNascimento = $data;
+    }
+
+
+    public function inserirCliente($nome, $email, $telefone, $cpf, $dataNascimento)
+    {
+        try {
+            $con = ConexaoBD::getConexao();
+            $sql = "INSERT INTO cliente (NOME, EMAIL, TELEFONE, CPF, DATA_NASCIMENTO)
+                    VALUES (:nome, :email, :telefone, :cpf, :data)";
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':nome', $this->$nome);
+            $stmt->bindParam(':email', $this->$email);
+            $stmt->bindParam(':telefone', $this->$telefone);
+            $stmt->bindParam(':cpf', $this->$cpf);
+            $stmt->bindParam(':data', $this->$dataNascimento);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (PDOException $e) {
+            die("Erro ao inserir cliente: " . $e->getMessage());
+        }
+    }
+
+
+    public function consultar($id)
+    {
+        $con = ConexaoBD::getConexao();
+        $sql = "SELECT * FROM cliente WHERE IDCLIENTE = :id";
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        $dados = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($dados) {
+            $this->id = $dados['IDCLIENTE'];
+            $this->nome = $dados['NOME'];
+            $this->email = $dados['EMAIL'];
+            $this->telefone = $dados['TELEFONE'];
+            $this->cpf = $dados['CPF'];
+            $this->dataNascimento = $dados['DATA_NASCIMENTO'];
+            return true;
+        }
+        return false;
+    }
+
+
+    public static function listar()
+    {
+        $con = ConexaoBD::getConexao();
+        $sql = "SELECT * FROM cliente ORDER BY NOME";
+        $stmt = $con->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function alterar()
+    {
+        $con = ConexaoBD::getConexao();
+        $sql = "UPDATE cliente
+                SET NOME = :nome, EMAIL = :email, TELEFONE = :telefone, CPF = :cpf, DATA_NASCIMENTO = :data
+                WHERE IDCLIENTE = :id";
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':nome', $this->nome);
+        $stmt->bindParam(':email', $this->email);
+        $stmt->bindParam(':telefone', $this->telefone);
+        $stmt->bindParam(':cpf', $this->cpf);
+        $stmt->bindParam(':data', $this->dataNascimento);
+        $stmt->bindParam(':id', $this->id);
+        return $stmt->execute();
+    }
+
+
+    public function excluir($id)
+    {
+        $con = ConexaoBD::getConexao();
+        $sql = "DELETE FROM cliente WHERE IDCLIENTE = :id";
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        return $stmt->execute();
+    }
+}
+?>
