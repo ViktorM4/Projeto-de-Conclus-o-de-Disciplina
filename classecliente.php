@@ -10,7 +10,6 @@ class Cliente
     private $cpf;
     private $dataNascimento;
 
-
     public function getId()
     {
         return $this->id_cliente;
@@ -60,32 +59,29 @@ class Cliente
         $this->dataNascimento = $data;
     }
 
-
     public function inserirCliente()
-{
-    try {
-        $con = ConexaoBD::getConexao(); 
-        $sql = "INSERT INTO cliente (NOME, EMAIL, TELEFONE, CPF, DATA_NASCIMENTO)
-                VALUES (:nome, :email, :telefone, :cpf, :data)";
-        $stmt = $con->prepare($sql);
-        $stmt->bindParam(':nome', $this->nome);
-        $stmt->bindParam(':email', $this->email);
-        $stmt->bindParam(':telefone', $this->telefone);
-        $stmt->bindParam(':cpf', $this->cpf);
-        $stmt->bindParam(':data', $this->dataNascimento);
-        $stmt->execute();
-        if ($stmt->rowCount() > 0) {
-            $this->id_cliente = $con->lastInsertId(); 
-            return true;
-        } else {
-            return false;
-        }
-
+    {
+        try {
+            $con = ConexaoBD::getConexao(); 
+            $sql = "INSERT INTO cliente (NOME, EMAIL, TELEFONE, CPF, DATA_NASCIMENTO)
+                    VALUES (:nome, :email, :telefone, :cpf, :data)";
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':nome', $this->nome);
+            $stmt->bindParam(':email', $this->email);
+            $stmt->bindParam(':telefone', $this->telefone);
+            $stmt->bindParam(':cpf', $this->cpf);
+            $stmt->bindParam(':data', $this->dataNascimento);
+            $stmt->execute();
+            if ($stmt->rowCount() > 0) {
+                $this->id_cliente = $con->lastInsertId(); 
+                return true;
+            } else {
+                return false;
+            }
         } catch (PDOException $e) {
             die("Erro ao inserir cliente: " . $e->getMessage());
         }
     }
-
 
     public function consultar($id_cliente)
     {
@@ -107,7 +103,6 @@ class Cliente
         return false;
     }
 
-
     public static function listar()
     {
         $con = ConexaoBD::getConexao();
@@ -116,7 +111,6 @@ class Cliente
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
 
     public function alterar()
     {
@@ -133,7 +127,6 @@ class Cliente
         $stmt->bindParam(':id', $this->id_cliente);
         return $stmt->execute();
     }
-
 
     public function excluir($id)
     {

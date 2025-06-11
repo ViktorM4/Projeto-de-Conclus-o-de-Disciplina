@@ -7,11 +7,12 @@ $clientes = Cliente::listar();
 <head>
     <meta charset="UTF-8">
     <title>Lista de Clientes</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Clientes</h1>
-    <a href="cliente.php">Novo Cliente</a>
-    <table border=1>
+    <a href="cliente.php"><button>Novo Cliente</button></a>
+    <table>
         <tr>
             <th>ID</th>
             <th>Nome</th>
