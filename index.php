@@ -4,12 +4,10 @@ $clientes = Cliente::listar();
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <title>Lista de Clientes</title>
 </head>
-
 <body>
     <h1>Clientes</h1>
     <a href="cliente.php">Novo Cliente</a>
@@ -20,6 +18,7 @@ $clientes = Cliente::listar();
             <th>Email</th>
             <th>Telefone</th>
             <th>CPF</th>
+            <th>Data Nascimento</th>
             <th>Ações</th>
         </tr>
 
@@ -29,21 +28,20 @@ $clientes = Cliente::listar();
                     <td><?= htmlspecialchars($cliente['IDCLIENTE'] ?? '') ?></td>
                     <td><?= htmlspecialchars($cliente['NOME'] ?? '') ?></td>
                     <td><?= htmlspecialchars($cliente['EMAIL'] ?? '') ?></td>
-                    <td><?= htmlspecialchars($cliente['DATA_NASCIMENTO'] ?? '') ?></td>
                     <td><?= htmlspecialchars($cliente['TELEFONE'] ?? '') ?></td>
                     <td><?= htmlspecialchars($cliente['CPF'] ?? '') ?></td>
-                    <form action="cliente.php" method="get"></form>
-                    <a href="cliente.php?id=<?= htmlspecialchars($cliente['IDCLIENTE']) ?>">Editar</a>
-                    <a href="excluir.php?id=<?= htmlspecialchars($cliente['IDCLIENTE']) ?>" onclick="return confirm('Confirma a exclusão?')">Excluir</a>
+                    <td><?= htmlspecialchars($cliente['DATA_NASCIMENTO'] ?? '') ?></td>
+                    <td>
+                        <a href="cliente.php?id=<?= htmlspecialchars($cliente['IDCLIENTE']) ?>">Editar</a>
+                        <a href="excluir.php?id=<?= htmlspecialchars($cliente['IDCLIENTE']) ?>" onclick="return confirm('Confirma a exclusão?')">Excluir</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
         <?php else: ?>
             <tr>
-                <td colspan="6">Nenhum cliente cadastrado.</td>
+                <td colspan="7">Nenhum cliente cadastrado.</td>
             </tr>
         <?php endif; ?>
     </table>
 </body>
-
 </html>

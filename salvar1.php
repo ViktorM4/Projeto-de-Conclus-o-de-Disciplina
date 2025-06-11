@@ -1,7 +1,9 @@
 <?php
 require 'classecliente.php'; 
 
-    $cliente = new Cliente();
+$id = isset($_POST['id']) ? $_POST['id'] : null;
+
+$cliente = new Cliente();
 
     $cliente->setNome(trim($_POST['nome']));
     $cliente->setEmail(trim($_POST['email']));

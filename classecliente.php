@@ -64,7 +64,7 @@ class Cliente
     public function inserirCliente()
 {
     try {
-        $con = ConexaoBD::getConexao(); //
+        $con = ConexaoBD::getConexao(); 
         $sql = "INSERT INTO cliente (NOME, EMAIL, TELEFONE, CPF, DATA_NASCIMENTO)
                 VALUES (:nome, :email, :telefone, :cpf, :data)";
         $stmt = $con->prepare($sql);
@@ -137,11 +137,15 @@ class Cliente
 
     public function excluir($id)
     {
-        $con = ConexaoBD::getConexao();
-        $sql = "DELETE FROM cliente WHERE IDCLIENTE = :id";
-        $stmt = $con->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        return $stmt->execute();
+        try {
+            $con = ConexaoBD::getConexao();
+            $sql = "DELETE FROM cliente WHERE IDCLIENTE = :id";
+            $stmt = $con->prepare($sql);
+            $stmt->bindParam(':id', $id);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
     }
 }
 ?>

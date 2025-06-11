@@ -1,14 +1,22 @@
 <?php 
 require 'classecliente.php';
 
-class excluir {
-    public function excluir($id)
-    {
-        $con = ConexaoBD::getConexao(); 
-        $sql = "DELETE FROM cliente WHERE IDCLIENTE = :id";
-        $stmt = $con->prepare($sql);
-        $stmt->bindParam(':id', $id); 
-        return $stmt->execute();
+$cliente = new Cliente();
+$id = isset($_GET['id']) ? $_GET['id'] : null;
+
+if ($id) {
+    try {
+        if ($cliente->excluir($id)) {
+            echo "Cliente excluído com sucesso!";
+        } else {
+            echo "Erro ao excluir cliente.";
+        }
+    } catch (PDOException $e) {
+        echo "Erro ao excluir cliente: " . $e->getMessage();
     }
+} else {
+    echo "ID não fornecido.";
 }
 ?>
+<br>
+<a href="index.php"><button>Voltar para a lista de clientes</button></a>
